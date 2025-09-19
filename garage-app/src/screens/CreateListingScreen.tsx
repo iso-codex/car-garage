@@ -14,12 +14,22 @@ const [image, setImage] = useState<string | null>(null);
 
 
 const pickImage = async () => {
-const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-if (!permission.granted) return alert('Permission required');
-const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images, quality: 0.7 });
-if (!result.cancelled) setImage(result.assets[0].uri);
-};
+  const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  if (!permission.granted) {
+    alert('Permission required');
+    return;
+  }
 
+  const result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    quality: 0.7,
+  });
+
+  // ✅ Use `canceled` (not `cancelled`) and check `assets`
+  if (!result.canceled && result.assets && result.assets.length > 0) {
+    setImage(result.assets[0].uri);
+  }
+};
 
 const uploadAndSave = async () => {
 try {
